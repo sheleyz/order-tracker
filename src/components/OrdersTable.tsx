@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
+import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -16,27 +17,43 @@ const columns: GridColDef[] = [
 
 // Manual Test Data
 // const orders = [
-//     { orderId: 1, createdDate: "Wednesday, 1 March 2023", createdByUserName: "Alex", orderType: "Standard", customerName: "Kroger" },
-//     { orderId: 2, createdDate: "Wednesday, 1 March 2023", createdByUserName: "Zach", orderType: "ReturnOrder", customerName: "Aldi" },
-//     { orderId: 3, createdDate: "Wednesday, 1 March 2023", createdByUserName: "Josh", orderType: "TransferOrder", customerName: "SEC" },
-//     { orderId: 4, createdDate: "Wednesday, 1 March 2023", createdByUserName: "Ryan", orderType: "SaleOrder", customerName: "CNG" },
-//     { orderId: 5, createdDate: "Wednesday, 1 March 2023", createdByUserName: "Emma", orderType: "PurchaseOrder", customerName: "XPO Logistics" },
-//     { orderId: 6, createdDate: "Wednesday, 1 March 2023", createdByUserName: "Bob", orderType: "Standard", customerName: "Kroger" },
-//     { orderId: 7, createdDate: null, createdByUserName: "Ferrara", orderType: "Standard", customerName: "Kroger" },
-//     { orderId: 8, createdDate: "Wednesday, 1 March 2023", createdByUserName: "Rossini", orderType: "Standard", customerName: "Kroger" },
-//     { orderId: 9, createdDate: null, createdByUserName: "Harvey", orderType: "Standard", customerName: "Kroger" }
+//     { orderId: "be74674a-e87c-46c7-958d-5f4245eb1107", createdDate: "Wednesday, 1 March 2023", createdByUserName: "Alex", orderType: "Standard", customerName: "Kroger" },
+//     { orderId: "b98e5b58-d616-403b-9ace-fbec839cfd21", createdDate: "Wednesday, 1 March 2023", createdByUserName: "Zach", orderType: "ReturnOrder", customerName: "Aldi" },
+//     { orderId: "e2c4922c-83b8-4237-b5da-8876a625c8d1", createdDate: "Wednesday, 1 March 2023", createdByUserName: "Josh", orderType: "TransferOrder", customerName: "SEC" },
+//     { orderId: "170019ad-fa1a-4c3d-a9e7-31c1c4b27393", createdDate: "Wednesday, 1 March 2023", createdByUserName: "Ryan", orderType: "SaleOrder", customerName: "CNG" },
+//     { orderId: "520993eb-8254-4903-93ec-405956d6373b", createdDate: "Wednesday, 1 March 2023", createdByUserName: "Emma", orderType: "PurchaseOrder", customerName: "XPO Logistics" },
+//     { orderId: "0fb4afad-7cf6-4a8a-9422-18d8a2961ef5", createdDate: "Wednesday, 1 March 2023", createdByUserName: "Bob", orderType: "Standard", customerName: "Kroger" },
+//     { orderId: "35c0a389-56c3-4847-a7b8-c0311f3a30dc", createdDate: null, createdByUserName: "Ferrara", orderType: "Standard", customerName: "Kroger" },
+//     { orderId: "d65ceeab-1c52-4aa9-b8a9-e34e6ea7b986", createdDate: "Wednesday, 1 March 2023", createdByUserName: "Rossini", orderType: "Standard", customerName: "Kroger" },
+//     { orderId: "df9f44e6-7e88-454a-9704-43831a951855", createdDate: null, createdByUserName: "Harvey", orderType: "Standard", customerName: "Kroger" }
 // ];
 
 export default function OrdersTable() {
     const [orders, setOrders] = useState([{ orderId: "", createdDate: "", createdByUserName: "", orderType: "", customerName: "" }]);
     const [orderType, setOrderType] = useState("");
+    const [orderId, setOrderId] = useState("");
     let filteredOrders = orders;
 
+    // Handle Order ID search input
+    const handleOrderIdChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setOrderId(event.target.value.toLowerCase());
+    };
+
     // Handle Order Type dropdown selection
-    const handleChange = (event: SelectChangeEvent) => {
+    const handleOrderTypeChange = (event: SelectChangeEvent) => {
         setOrderType(event.target.value);
     };
 
+    // Filter orders based on Order ID search input
+    if (orderId !== "") {
+        filteredOrders = orders.filter((order) => {
+            if (order.orderId.indexOf(orderId) > -1) {
+                return order;
+            } else {
+                return "";
+            }
+        });
+    }
     // Filter orders based on Order Type dropdown selection
     if (orderType !== "") {
         filteredOrders = orders.filter((order) => order.orderType === orderType);
@@ -59,10 +76,13 @@ export default function OrdersTable() {
 
     return (
         <div style={{ height: 400, width: "100%" }}>
+            {/* Search Order ID */}
+            <TextField id="search-order-id" label="Order ID" variant="outlined" value={orderId} onChange={handleOrderIdChange} sx={{ m: 1 }} size="small" />
+
             {/* Order Type Dropdown Filter */}
             <FormControl sx={{ m: 1, minWidth: 130 }} size="small">
                 <InputLabel id="select-order-type-label">Order Type</InputLabel>
-                <Select labelId="select-order-type-label" id="select-order-type" value={orderType} label="Order Type" onChange={handleChange}>
+                <Select labelId="select-order-type-label" id="select-order-type" value={orderType} label="Order Type" onChange={handleOrderTypeChange}>
                     <MenuItem value={""}>All</MenuItem>
                     <MenuItem value={"Standard"}>Standard</MenuItem>
                     <MenuItem value={"ReturnOrder"}>Return Order</MenuItem>
