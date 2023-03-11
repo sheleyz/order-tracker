@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 
+// Define Grid Columns
 const columns: GridColDef[] = [
     { field: "orderId", headerName: "Order ID", width: 300 },
     { field: "createdDate", headerName: "Creation Date", width: 200 },
@@ -22,9 +27,23 @@ const columns: GridColDef[] = [
 //     { orderId: 9, createdDate: null, createdByUserName: "Harvey", orderType: "Standard", customerName: "Kroger" }
 // ];
 
-export default function DataTable() {
-    const [orders, setOrders] = useState([]);
+export default function OrdersTable() {
+    const [orders, setOrders] = useState([{ orderId: "", createdDate: "", createdByUserName: "", orderType: "", customerName: "" }]);
+    const [orderType, setOrderType] = useState("");
+    let filteredOrders = orders;
+
+    // Handle Order Type dropdown selection
+    const handleChange = (event: SelectChangeEvent) => {
+        setOrderType(event.target.value);
+    };
+
+    // Filter orders based on Order Type dropdown selection
+    if (orderType !== "") {
+        filteredOrders = orders.filter((order) => order.orderType === orderType);
+    }
+
     useEffect(() => {
+        // GET orders from API
         fetch("https://red-candidate-web.azurewebsites.net/api/Orders", {
             headers: {
                 ApiKey: `${process.env.REACT_APP_API_KEY}`
@@ -40,8 +59,22 @@ export default function DataTable() {
 
     return (
         <div style={{ height: 400, width: "100%" }}>
+            {/* Order Type Dropdown Filter */}
+            <FormControl sx={{ m: 1, minWidth: 130 }} size="small">
+                <InputLabel id="select-order-type-label">Order Type</InputLabel>
+                <Select labelId="select-order-type-label" id="select-order-type" value={orderType} label="Order Type" onChange={handleChange}>
+                    <MenuItem value={""}>All</MenuItem>
+                    <MenuItem value={"Standard"}>Standard</MenuItem>
+                    <MenuItem value={"ReturnOrder"}>Return Order</MenuItem>
+                    <MenuItem value={"TransferOrder"}>Transfer Order</MenuItem>
+                    <MenuItem value={"SaleOrder"}>Sale Order</MenuItem>
+                    <MenuItem value={"PurchaseOrder"}>Purchase Order</MenuItem>
+                </Select>
+            </FormControl>
+
+            {/* View of Order Entities */}
             <DataGrid
-                rows={orders}
+                rows={filteredOrders}
                 columns={columns}
                 getRowId={(row) => row.orderId}
                 initialState={{
