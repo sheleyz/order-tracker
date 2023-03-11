@@ -17,3 +17,8 @@ body {
   width: 3rem;
   margin-right: 15px;
 }
+
+.actionBar {
+  display: flex;
+  flex-wrap: wrap;
+}
