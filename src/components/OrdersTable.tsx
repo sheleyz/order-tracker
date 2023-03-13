@@ -120,6 +120,9 @@ export default function OrdersTable() {
     }
 
     const getOrderData = () => {
+        // Consume REST APIs in React: https://www.freecodecamp.org/news/how-to-consume-rest-apis-in-react/
+        // API Page: https://red-candidate-web.azurewebsites.net/index.html
+
         // GET orders from API
         fetch("https://red-candidate-web.azurewebsites.net/api/Orders", {
             headers: {
@@ -138,6 +141,8 @@ export default function OrdersTable() {
         getOrderData();
     }, []);
 
+    // Material UI Docs: https://mui.com/material-ui/getting-started/overview/
+    // MUI X DataGrid Docs: https://mui.com/x/react-data-grid/
     return (
         <div style={{ height: 400, width: "100%" }}>
             <div className="actionBar">
