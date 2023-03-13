@@ -5,6 +5,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Button from "@mui/material/Button";
+import Alert from '@mui/material/Alert';
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -34,6 +35,7 @@ export default function OrdersTable() {
     const [addedOrderType, setAddedOrderType] = useState("");
     const [addedCustomerName, setAddedCustomerName] = useState("");
     const [open, setOpen] = useState(false);
+    const [showError, setShowError] = useState(false);
     const [rowSelectionModel, setRowSelectionModel] = useState<GridRowSelectionModel>([]);
     let filteredOrders = orders;
 
@@ -68,30 +70,35 @@ export default function OrdersTable() {
         const today = new Date();
         let todayString = today.toDateString();
 
-        // POST created order to API
-        fetch("https://red-candidate-web.azurewebsites.net/api/Orders", {
-            method: "POST",
-            headers: {
-                ApiKey: `${process.env.REACT_APP_API_KEY}`,
-                Accept: "application/json",
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                orderId: uuidv4(), // Generates random UUID
-                createdDate: todayString,
-                createdByUserName: userNameInput,
-                orderType: orderTypeInput,
-                customerName: customerNameInput
+        if (userNameInput !== "" && orderTypeInput !== "" && customerNameInput !== "") {
+            // POST created order to API
+            fetch("https://red-candidate-web.azurewebsites.net/api/Orders", {
+                method: "POST",
+                headers: {
+                    ApiKey: `${process.env.REACT_APP_API_KEY}`,
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    orderId: uuidv4(), // Generates random UUID
+                    createdDate: todayString,
+                    createdByUserName: userNameInput,
+                    orderType: orderTypeInput,
+                    customerName: customerNameInput
+                })
             })
-        })
-            .then((response) => response.json())
-            .then(() => getOrderData())
-            .catch((error) => console.error(error));
+                .then((response) => response.json())
+                .then(() => getOrderData())
+                .catch((error) => console.error(error));
 
-        setAddedUserName("");
-        setAddedOrderType("");
-        setAddedCustomerName("");
-        setOpen(false);
+            setShowError(false);
+            setAddedUserName("");
+            setAddedOrderType("");
+            setAddedCustomerName("");
+            setOpen(false);
+        } else {
+            setShowError(true);
+        }
     };
 
     // Handle button click to delete order(s)
@@ -174,6 +181,7 @@ export default function OrdersTable() {
                 </Button>
                 <Dialog open={open} onClose={() => setOpen(false)}>
                     <DialogTitle>Create Order</DialogTitle>
+                    {showError && <Alert severity="error">Please fill out all fields to create an order.</Alert>}
                     <DialogContent>
                         <DialogContentText>To create an order, please enter your name, the order type, and the customer name.</DialogContentText>
                         <TextField autoFocus required id="user-name" label="User Name" fullWidth variant="outlined" sx={{ my: 1 }} size="small" value={addedUserName} onChange={handleAddedUserName} />
@@ -190,7 +198,7 @@ export default function OrdersTable() {
                         <TextField required id="customer-name" label="Customer Name" fullWidth variant="outlined" sx={{ my: 1 }} size="small" value={addedCustomerName} onChange={handleAddedCustomerName} />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={() => setOpen(false)}>Cancel</Button>
+                        <Button onClick={() => {setOpen(false); setShowError(false);}}>Cancel</Button>
                         <Button onClick={() => handleCreate(addedUserName, addedOrderType, addedCustomerName)}>Create</Button>
                     </DialogActions>
                 </Dialog>
