@@ -27,7 +27,7 @@ const columns: GridColDef[] = [
     { field: "customerName", headerName: "Customer", width: 150 }
 ];
 
-export default function OrdersTable() {
+export default function OrdersGrid() {
     const [orders, setOrders] = useState([{ orderId: "", createdDate: "", createdByUserName: "", orderType: "", customerName: "" }]);
     const [orderType, setOrderType] = useState("");
     const [orderId, setOrderId] = useState("");

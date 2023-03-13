@@ -3,13 +3,13 @@ import "./index.css";
 
 // Components
 import Header from "./components/Header";
-import OrdersTable from "./components/OrdersTable";
+import OrdersGrid from "./components/OrdersGrid";
 
 function App() {
     return (
         <div className="App">
             <Header />
-            <OrdersTable />
+            <OrdersGrid />
         </div>
     );
 }
