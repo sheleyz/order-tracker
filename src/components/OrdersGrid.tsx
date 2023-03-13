@@ -144,7 +144,7 @@ export default function OrdersGrid() {
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log(data);
+                // console.log(data);
                 setOrders(data);
             })
             .catch((error) => console.error(error));
@@ -217,9 +217,9 @@ export default function OrdersGrid() {
                 columns={columns}
                 getRowId={(row) => row.orderId}
                 initialState={{
-                    pagination: { paginationModel: { pageSize: 5 } }
+                    pagination: { paginationModel: { pageSize: 10 } }
                 }}
-                pageSizeOptions={[5, 10, 25]}
+                pageSizeOptions={[10, 20, 30]}
                 checkboxSelection
                 onRowSelectionModelChange={(newRowSelectionModel) => setRowSelectionModel(newRowSelectionModel)}
                 rowSelectionModel={rowSelectionModel}
