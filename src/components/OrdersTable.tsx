@@ -13,13 +13,17 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { v4 as uuidv4 } from "uuid";
 import { DataGrid, GridColDef, GridRowSelectionModel } from "@mui/x-data-grid";
 
+// Icons
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+
 // Define Grid Columns
 const columns: GridColDef[] = [
-    { field: "orderId", headerName: "Order ID", width: 300 },
-    { field: "createdDate", headerName: "Creation Date", width: 200 },
-    { field: "createdByUserName", headerName: "Created By", width: 90 },
-    { field: "orderType", headerName: "Order Type", width: 130 },
-    { field: "customerName", headerName: "Customer", width: 130 }
+    { field: "orderId", headerName: "Order ID", width: 325 },
+    { field: "createdDate", headerName: "Creation Date", width: 225 },
+    { field: "createdByUserName", headerName: "Created By", width: 150 },
+    { field: "orderType", headerName: "Order Type", width: 150 },
+    { field: "customerName", headerName: "Customer", width: 150 }
 ];
 
 export default function OrdersTable() {
@@ -146,7 +150,7 @@ export default function OrdersTable() {
     // Material UI Docs: https://mui.com/material-ui/getting-started/overview/
     // MUI X DataGrid Docs: https://mui.com/x/react-data-grid/
     return (
-        <div style={{ height: 400, width: "100%" }}>
+        <div style={{ height: "70vh", width: "100%" }}>
             <div className="actionBar">
                 {/* Search Order ID */}
                 <TextField id="search-order-id" label="Order ID Search" variant="outlined" value={orderId} onChange={handleOrderIdChange} sx={{ m: 1 }} size="small" />
@@ -166,7 +170,7 @@ export default function OrdersTable() {
 
                 {/* Create Order Entity */}
                 <Button variant="contained" onClick={() => setOpen(true)} sx={{ m: 1 }}>
-                    Create Order
+                    <AddIcon /> Create Order
                 </Button>
                 <Dialog open={open} onClose={() => setOpen(false)}>
                     <DialogTitle>Create Order</DialogTitle>
@@ -193,7 +197,7 @@ export default function OrdersTable() {
 
                 {/* Delete Selected Order(s) */}
                 <Button variant="contained" onClick={() => handleDelete(rowSelectionModel)} sx={{ m: 1 }}>
-                    Delete Selected
+                    <DeleteIcon /> Delete Selected
                 </Button>
             </div>
 

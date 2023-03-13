@@ -9,16 +9,32 @@ body {
   min-height: 2rem;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
   padding: 0px 20px;
   border-bottom: 3px solid #E0E0E0;
 }
 
 .App-header img {
   width: 3rem;
+  height: 3rem;
   margin-right: 15px;
+}
+
+.headerSections {
+  display: flex;
+  align-items: center;
+}
+
+.headerSections a {
+  color: inherit;
 }
 
 .actionBar {
   display: flex;
   flex-wrap: wrap;
+}
+
+.MuiCheckbox-root.Mui-checked svg {
+  color: #DB3534;
 }
