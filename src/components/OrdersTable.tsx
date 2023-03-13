@@ -11,7 +11,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { v4 as uuidv4 } from "uuid";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridRowSelectionModel } from "@mui/x-data-grid";
 
 // Define Grid Columns
 const columns: GridColDef[] = [
@@ -42,6 +42,7 @@ export default function OrdersTable() {
     const [addedOrderType, setAddedOrderType] = useState("");
     const [addedCustomerName, setAddedCustomerName] = useState("");
     const [open, setOpen] = useState(false);
+    const [rowSelectionModel, setRowSelectionModel] = useState<GridRowSelectionModel>([]);
     let filteredOrders = orders;
 
     // Handle Order ID search input
@@ -110,6 +111,24 @@ export default function OrdersTable() {
             })
             .catch((error) => console.error(error));
         setOpen(false);
+    };
+
+    // Handle button click to delete order(s)
+    const handleDelete = (deleteOrderIds: GridRowSelectionModel) => {
+        console.log(deleteOrderIds);
+
+        // POST deleted order(s) to API
+        fetch("https://red-candidate-web.azurewebsites.net/api/Orders/Delete", {
+            method: "POST",
+            headers: {
+                ApiKey: `${process.env.REACT_APP_API_KEY}`,
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(deleteOrderIds)
+        })
+            .then(() => getOrderData())
+            .catch((error) => console.error(error));
     };
 
     // Filter orders based on Order ID search input
@@ -191,6 +210,11 @@ export default function OrdersTable() {
                         <Button onClick={() => handleCreate(addedUserName, addedOrderType, addedCustomerName)}>Create</Button>
                     </DialogActions>
                 </Dialog>
+
+                {/* Delete Selected Order(s) */}
+                <Button variant="contained" onClick={() => handleDelete(rowSelectionModel)} sx={{ m: 1 }}>
+                    Delete Selected
+                </Button>
             </div>
 
             {/* View of Order Entities */}
@@ -203,6 +227,8 @@ export default function OrdersTable() {
                 }}
                 pageSizeOptions={[5, 10, 25]}
                 checkboxSelection
+                onRowSelectionModelChange={(newRowSelectionModel) => setRowSelectionModel(newRowSelectionModel)}
+                rowSelectionModel={rowSelectionModel}
             />
         </div>
     );
