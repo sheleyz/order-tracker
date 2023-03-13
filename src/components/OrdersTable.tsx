@@ -204,9 +204,11 @@ export default function OrdersTable() {
                 </Dialog>
 
                 {/* Delete Selected Order(s) */}
-                <Button variant="contained" onClick={() => handleDelete(rowSelectionModel)} sx={{ m: 1 }}>
-                    <DeleteIcon /> Delete Selected
-                </Button>
+                {rowSelectionModel.length !== 0 && (
+                    <Button variant="contained" onClick={() => handleDelete(rowSelectionModel)} sx={{ m: 1 }}>
+                        <DeleteIcon /> Delete Selected
+                    </Button>
+                )}
             </div>
 
             {/* View of Order Entities */}
