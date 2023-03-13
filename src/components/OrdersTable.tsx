@@ -81,10 +81,12 @@ export default function OrdersTable() {
             })
         })
             .then((response) => response.json())
-            .then((data) => {
-                getOrderData();
-            })
+            .then(() => getOrderData())
             .catch((error) => console.error(error));
+
+        setAddedUserName("");
+        setAddedOrderType("");
+        setAddedCustomerName("");
         setOpen(false);
     };
 
@@ -147,7 +149,7 @@ export default function OrdersTable() {
         <div style={{ height: 400, width: "100%" }}>
             <div className="actionBar">
                 {/* Search Order ID */}
-                <TextField id="search-order-id" label="Order ID" variant="outlined" value={orderId} onChange={handleOrderIdChange} sx={{ m: 1 }} size="small" />
+                <TextField id="search-order-id" label="Order ID Search" variant="outlined" value={orderId} onChange={handleOrderIdChange} sx={{ m: 1 }} size="small" />
 
                 {/* Order Type Dropdown Filter */}
                 <FormControl sx={{ m: 1, minWidth: 130 }} size="small">
@@ -162,7 +164,7 @@ export default function OrdersTable() {
                     </Select>
                 </FormControl>
 
-                {/* Add Order Entity */}
+                {/* Create Order Entity */}
                 <Button variant="contained" onClick={() => setOpen(true)} sx={{ m: 1 }}>
                     Create Order
                 </Button>
