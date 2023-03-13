@@ -36,6 +36,7 @@ export default function OrdersGrid() {
     const [addedCustomerName, setAddedCustomerName] = useState("");
     const [open, setOpen] = useState(false);
     const [showError, setShowError] = useState(false);
+    const [showApiError, setShowApiError] = useState(false);
     const [rowSelectionModel, setRowSelectionModel] = useState<GridRowSelectionModel>([]);
     let filteredOrders = orders;
 
@@ -146,8 +147,9 @@ export default function OrdersGrid() {
             .then((data) => {
                 // console.log(data);
                 setOrders(data);
+                setShowApiError(false);
             })
-            .catch((error) => console.error(error));
+            .catch((error) => {console.error(error); setShowApiError(true);});
     };
 
     useEffect(() => {
@@ -158,6 +160,7 @@ export default function OrdersGrid() {
     // MUI X DataGrid Docs: https://mui.com/x/react-data-grid/
     return (
         <div style={{ height: "70vh", width: "100%" }}>
+            {showApiError && <Alert severity="error">Error fetching API.</Alert>}
             <div className="actionBar">
                 {/* Search Order ID */}
                 <TextField id="search-order-id" label="Order ID Search" variant="outlined" value={orderId} onChange={handleOrderIdChange} sx={{ m: 1 }} size="small" />
