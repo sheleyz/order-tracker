@@ -1,5 +1,7 @@
 # Order Tracker
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/7555b48b-5f30-4cbe-b087-4951278cabb8/deploy-status)](https://app.netlify.com/sites/redordertracker/deploys)
+
 ## Available Scripts
 
 In the project directory, you can run:
