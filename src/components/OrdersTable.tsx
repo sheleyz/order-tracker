@@ -23,18 +23,6 @@ const columns: GridColDef[] = [
 ];
 
 export default function OrdersTable() {
-    // Manual Test Data
-    // const [orders, setOrders] = useState([
-    //     { orderId: "be74674a-e87c-46c7-958d-5f4245eb1107", createdDate: "Wednesday, 1 March 2023", createdByUserName: "Alex", orderType: "Standard", customerName: "Kroger" },
-    //     { orderId: "b98e5b58-d616-403b-9ace-fbec839cfd21", createdDate: "Wednesday, 1 March 2023", createdByUserName: "Zach", orderType: "ReturnOrder", customerName: "Aldi" },
-    //     { orderId: "e2c4922c-83b8-4237-b5da-8876a625c8d1", createdDate: "Wednesday, 1 March 2023", createdByUserName: "Josh", orderType: "TransferOrder", customerName: "SEC" },
-    //     { orderId: "170019ad-fa1a-4c3d-a9e7-31c1c4b27393", createdDate: "Wednesday, 1 March 2023", createdByUserName: "Ryan", orderType: "SaleOrder", customerName: "CNG" },
-    //     { orderId: "520993eb-8254-4903-93ec-405956d6373b", createdDate: "Wednesday, 1 March 2023", createdByUserName: "Emma", orderType: "PurchaseOrder", customerName: "XPO Logistics" },
-    //     { orderId: "0fb4afad-7cf6-4a8a-9422-18d8a2961ef5", createdDate: "Wednesday, 1 March 2023", createdByUserName: "Bob", orderType: "Standard", customerName: "Kroger" },
-    //     { orderId: "35c0a389-56c3-4847-a7b8-c0311f3a30dc", createdDate: null, createdByUserName: "Ferrara", orderType: "Standard", customerName: "Kroger" },
-    //     { orderId: "d65ceeab-1c52-4aa9-b8a9-e34e6ea7b986", createdDate: "Wednesday, 1 March 2023", createdByUserName: "Rossini", orderType: "Standard", customerName: "Kroger" },
-    //     { orderId: "df9f44e6-7e88-454a-9704-43831a951855", createdDate: null, createdByUserName: "Harvey", orderType: "Standard", customerName: "Kroger" }
-    // ]);
     const [orders, setOrders] = useState([{ orderId: "", createdDate: "", createdByUserName: "", orderType: "", customerName: "" }]);
     const [orderType, setOrderType] = useState("");
     const [orderId, setOrderId] = useState("");
@@ -76,18 +64,6 @@ export default function OrdersTable() {
         const today = new Date();
         let todayString = today.toDateString();
 
-        // Add created order to manual test data
-        // setOrders([
-        //     ...orders,
-        //     {
-        //         orderId: uuidv4(), // Generates random UUID
-        //         createdDate: todayString,
-        //         createdByUserName: userNameInput,
-        //         orderType: orderTypeInput,
-        //         customerName: customerNameInput
-        //     }
-        // ]);
-
         // POST created order to API
         fetch("https://red-candidate-web.azurewebsites.net/api/Orders", {
             method: "POST",
@@ -106,7 +82,6 @@ export default function OrdersTable() {
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log(data);
                 getOrderData();
             })
             .catch((error) => console.error(error));
@@ -115,8 +90,6 @@ export default function OrdersTable() {
 
     // Handle button click to delete order(s)
     const handleDelete = (deleteOrderIds: GridRowSelectionModel) => {
-        console.log(deleteOrderIds);
-
         // POST deleted order(s) to API
         fetch("https://red-candidate-web.azurewebsites.net/api/Orders/Delete", {
             method: "POST",
