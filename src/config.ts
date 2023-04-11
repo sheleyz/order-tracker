@@ -2,7 +2,7 @@ export default {
     title: "Order Tracker",
     description: "An application used to track orders",
     image: "/favicon.png",
-    siteUrl: "https://companyordertracker.netlify.app/",
+    siteUrl: "https://companyordertracker.vercel.app/",
     name: "Order Tracker",
     short_name: "Order Tracker",
     start_url: "/",

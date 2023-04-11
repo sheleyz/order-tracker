@@ -7,7 +7,7 @@ const Seo = () => {
         <Head>
             <title>{config.title}</title>
             <meta name="description" content={config.description} />
-            <meta name="image" content="https://companyordertracker.netlify.app/favicon.png" />
+            <meta name="image" content="https://companyordertracker.vercel.app" />
             <meta property="og:title" content={config.title} />
             <meta property="og:url" content={config.siteUrl} />
             <meta property="og:image" content="/favicon.png" />
