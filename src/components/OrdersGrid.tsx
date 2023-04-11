@@ -28,6 +28,20 @@ const columns: GridColDef[] = [
 ];
 
 export default function OrdersGrid() {
+    // Manual Test Data
+    const [ordersTestData, setOrdersTestData] = useState([
+        { orderId: "be74674a-e87c-46c7-958d-5f4245eb1107", createdDate: "Wednesday, 01 March 2023", createdByUserName: "Alex", orderType: "Standard", customerName: "Kroger" },
+        { orderId: "b98e5b58-d616-403b-9ace-fbec839cfd21", createdDate: "Monday, 13 March 2023", createdByUserName: "Zach", orderType: "ReturnOrder", customerName: "Aldi" },
+        { orderId: "e2c4922c-83b8-4237-b5da-8876a625c8d1", createdDate: "Friday, 24 March 2023", createdByUserName: "Josh", orderType: "TransferOrder", customerName: "SEC" },
+        { orderId: "170019ad-fa1a-4c3d-a9e7-31c1c4b27393", createdDate: "Tuesday, 28 March 2023", createdByUserName: "Ryan", orderType: "SaleOrder", customerName: "CNG" },
+        { orderId: "35c0a389-56c3-4847-a7b8-c0311f3a30dc", createdDate: "Wednesday, 05 April 2023", createdByUserName: "Ferrara", orderType: "PurchaseOrder", customerName: "Walmart" },
+        { orderId: "0fb4afad-7cf6-4a8a-9422-18d8a2961ef5", createdDate: "Monday, 10 April 2023", createdByUserName: "Bob", orderType: "Standard", customerName: "Target" },
+        { orderId: "520993eb-8254-4903-93ec-405956d6373b", createdDate: "Thursday, 20 April 2023", createdByUserName: "Emma", orderType: "PurchaseOrder", customerName: "XPO Logistics" },
+        { orderId: "d65ceeab-1c52-4aa9-b8a9-e34e6ea7b986", createdDate: "Tuesday, 25 April 2023", createdByUserName: "Rossini", orderType: "Standard", customerName: "CVS" },
+        { orderId: "df9f44e6-7e88-454a-9704-43831a951855", createdDate: "Thursday, 04 May 2023", createdByUserName: "Harvey", orderType: "TransferOrder", customerName: "Meijer" }
+    ]);
+    const [useTestData, setUseTestData] = useState(true);
+
     const [orders, setOrders] = useState([{ orderId: "", createdDate: "", createdByUserName: "", orderType: "", customerName: "" }]);
     const [orderType, setOrderType] = useState("");
     const [orderId, setOrderId] = useState("");
@@ -38,7 +52,13 @@ export default function OrdersGrid() {
     const [showError, setShowError] = useState(false);
     const [showApiError, setShowApiError] = useState(false);
     const [rowSelectionModel, setRowSelectionModel] = useState<GridRowSelectionModel>([]);
-    let filteredOrders = orders;
+    let filteredOrders;
+
+    if (useTestData === false) {
+        filteredOrders = orders;
+    } else {
+        filteredOrders = ordersTestData;
+    }
 
     // Handle Order ID search input
     const handleOrderIdChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -70,6 +90,18 @@ export default function OrdersGrid() {
         // Get today's date (for the Created Date)
         const today = new Date();
         let todayString = today.toDateString();
+
+        // Add created order to manual test data
+        setOrdersTestData([
+            ...orders,
+            {
+                orderId: uuidv4(), // Generates random UUID
+                createdDate: todayString,
+                createdByUserName: userNameInput,
+                orderType: orderTypeInput,
+                customerName: customerNameInput
+            }
+        ]);
 
         if (userNameInput !== "" && orderTypeInput !== "" && customerNameInput !== "") {
             // POST created order to API
@@ -149,7 +181,11 @@ export default function OrdersGrid() {
                 setOrders(data);
                 setShowApiError(false);
             })
-            .catch((error) => {console.error(error); setShowApiError(true);});
+            .catch((error) => {
+                console.error(error);
+                setUseTestData(true);
+                setShowApiError(true);
+            });
     };
 
     useEffect(() => {
