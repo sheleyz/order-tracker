@@ -109,7 +109,7 @@ export default function OrdersGrid() {
                 fetch("https://red-candidate-web.azurewebsites.net/api/Orders", {
                     method: "POST",
                     headers: {
-                        ApiKey: `${process.env.REACT_APP_API_KEY}`,
+                        ApiKey: `${process.env.NEXT_PUBLIC_API_KEY}`,
                         Accept: "application/json",
                         "Content-Type": "application/json"
                     },
@@ -156,7 +156,7 @@ export default function OrdersGrid() {
             fetch("https://red-candidate-web.azurewebsites.net/api/Orders/Delete", {
                 method: "POST",
                 headers: {
-                    ApiKey: `${process.env.REACT_APP_API_KEY}`,
+                    ApiKey: `${process.env.NEXT_PUBLIC_API_KEY}`,
                     Accept: "application/json",
                     "Content-Type": "application/json"
                 },
@@ -189,7 +189,7 @@ export default function OrdersGrid() {
         // GET orders from API
         fetch("https://red-candidate-web.azurewebsites.net/api/Orders", {
             headers: {
-                ApiKey: `${process.env.REACT_APP_API_KEY}`
+                ApiKey: `${process.env.NEXT_PUBLIC_API_KEY}`
             }
         })
             .then((response) => response.json())
