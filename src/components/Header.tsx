@@ -1,17 +1,15 @@
 import React from "react";
 
-// Images
-import REDTechnologiesLogo from "../images/red-technologies-logo.png";
-
 // Icons
 import SettingsIcon from "@mui/icons-material/Settings";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import SellIcon from '@mui/icons-material/Sell';
 
 export default function Header() {
     return (
         <header className="App-header">
             <div className="headerSections">
-                <a href="/"><img src={REDTechnologiesLogo} alt="RED Technologies logo" /></a>
+                <a href="/"><SellIcon fontSize="large" sx={{ mx: 1, pt: 1}} htmlColor="#1976D2" /></a>
                 <h1>Home</h1>
             </div>
             <div className="headerSections">

@@ -34,7 +34,3 @@ body {
   display: flex;
   flex-wrap: wrap;
 }
-
-.MuiCheckbox-root.Mui-checked svg {
-  color: #DB3534;
-}
