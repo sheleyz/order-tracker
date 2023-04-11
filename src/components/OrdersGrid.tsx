@@ -5,7 +5,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Button from "@mui/material/Button";
-import Alert from '@mui/material/Alert';
+import Alert from "@mui/material/Alert";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -15,8 +15,8 @@ import { v4 as uuidv4 } from "uuid";
 import { DataGrid, GridColDef, GridRowSelectionModel } from "@mui/x-data-grid";
 
 // Icons
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 // Define Grid Columns
 const columns: GridColDef[] = [
@@ -54,10 +54,10 @@ export default function OrdersGrid() {
     const [rowSelectionModel, setRowSelectionModel] = useState<GridRowSelectionModel>([]);
     let filteredOrders;
 
-    if (useTestData === false) {
-        filteredOrders = orders;
-    } else {
+    if (useTestData) {
         filteredOrders = ordersTestData;
+    } else {
+        filteredOrders = orders;
     }
 
     // Handle Order ID search input
@@ -91,38 +91,40 @@ export default function OrdersGrid() {
         const today = new Date();
         let todayString = today.toDateString();
 
-        // Add created order to manual test data
-        setOrdersTestData([
-            ...orders,
-            {
-                orderId: uuidv4(), // Generates random UUID
-                createdDate: todayString,
-                createdByUserName: userNameInput,
-                orderType: orderTypeInput,
-                customerName: customerNameInput
-            }
-        ]);
-
         if (userNameInput !== "" && orderTypeInput !== "" && customerNameInput !== "") {
-            // POST created order to API
-            fetch("https://red-candidate-web.azurewebsites.net/api/Orders", {
-                method: "POST",
-                headers: {
-                    ApiKey: `${process.env.REACT_APP_API_KEY}`,
-                    Accept: "application/json",
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    orderId: uuidv4(), // Generates random UUID
-                    createdDate: todayString,
-                    createdByUserName: userNameInput,
-                    orderType: orderTypeInput,
-                    customerName: customerNameInput
+            if (useTestData) {
+                // Add created order to manual test data
+                setOrdersTestData([
+                    ...ordersTestData,
+                    {
+                        orderId: uuidv4(), // Generates random UUID
+                        createdDate: todayString,
+                        createdByUserName: userNameInput,
+                        orderType: orderTypeInput,
+                        customerName: customerNameInput
+                    }
+                ]);
+            } else {
+                // POST created order to API
+                fetch("https://red-candidate-web.azurewebsites.net/api/Orders", {
+                    method: "POST",
+                    headers: {
+                        ApiKey: `${process.env.REACT_APP_API_KEY}`,
+                        Accept: "application/json",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        orderId: uuidv4(), // Generates random UUID
+                        createdDate: todayString,
+                        createdByUserName: userNameInput,
+                        orderType: orderTypeInput,
+                        customerName: customerNameInput
+                    })
                 })
-            })
-                .then((response) => response.json())
-                .then(() => getOrderData())
-                .catch((error) => console.error(error));
+                    .then((response) => response.json())
+                    .then(() => getOrderData())
+                    .catch((error) => console.error(error));
+            }
 
             setShowError(false);
             setAddedUserName("");
@@ -136,23 +138,38 @@ export default function OrdersGrid() {
 
     // Handle button click to delete order(s)
     const handleDelete = (deleteOrderIds: GridRowSelectionModel) => {
-        // POST deleted order(s) to API
-        fetch("https://red-candidate-web.azurewebsites.net/api/Orders/Delete", {
-            method: "POST",
-            headers: {
-                ApiKey: `${process.env.REACT_APP_API_KEY}`,
-                Accept: "application/json",
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(deleteOrderIds)
-        })
-            .then(() => getOrderData())
-            .catch((error) => console.error(error));
+        if (useTestData) {
+            // Delete selected order(s) from manual test data
+            filteredOrders = ordersTestData.filter((order) => {
+                let findOrder = deleteOrderIds.find((orderId) => {
+                    return orderId === order.orderId;
+                });
+                if (findOrder === undefined) {
+                    return order;
+                } else {
+                    return "";
+                }
+            });
+            setOrdersTestData(filteredOrders);
+        } else {
+            // POST order(s) selected for deletion to API
+            fetch("https://red-candidate-web.azurewebsites.net/api/Orders/Delete", {
+                method: "POST",
+                headers: {
+                    ApiKey: `${process.env.REACT_APP_API_KEY}`,
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(deleteOrderIds)
+            })
+                .then(() => getOrderData())
+                .catch((error) => console.error(error));
+        }
     };
 
     // Filter orders based on Order ID search input
     if (orderId !== "") {
-        filteredOrders = orders.filter((order) => {
+        filteredOrders = filteredOrders.filter((order) => {
             if (order.orderId.indexOf(orderId) > -1) {
                 return order;
             } else {
@@ -162,7 +179,7 @@ export default function OrdersGrid() {
     }
     // Filter orders based on Order Type dropdown selection
     if (orderType !== "") {
-        filteredOrders = orders.filter((order) => order.orderType === orderType);
+        filteredOrders = filteredOrders.filter((order) => order.orderType === orderType);
     }
 
     const getOrderData = () => {
