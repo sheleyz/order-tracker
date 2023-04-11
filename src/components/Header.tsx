@@ -10,7 +10,7 @@ export default function Header() {
         <header className="App-header">
             <div className="headerSections">
                 <a href="/"><SellIcon fontSize="large" sx={{ mx: 1, pt: 1}} htmlColor="#1976D2" /></a>
-                <h1>Home</h1>
+                <h1>Order Tracker</h1>
             </div>
             <div className="headerSections">
                 <a href="/#"><SettingsIcon fontSize="large" sx={{ m: 1 }} /></a>
